@@ -25,19 +25,22 @@ public class FiltersTestCase extends BaseClass {
 
         HomePage homePage = new HomePage();
         homePage.handleCookieConsent();
-        ProductsPage productsPage = homePage.navigateToProducts("PARFUM");
-
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            String filterName = entry.getKey();
-            String filterValue = entry.getValue();
-            productsPage.openFilter(filterName);
-            productsPage.applyFilter(filterValue);
-        }
+        ProductsPage productsPage = homePage.navigateToParfumProducts();
+        productsPage.applyMultipleFilters(data);
 
 //        Verifying Filters Applied
         for (String filterName : data.values()) {
             Assert.assertTrue(productsPage.isFilterApplied(filterName));
         }
+
+
+//       Asserting Brand Filter
+        String brandName = productsPage.getFirstProductBrand();
+        Assert.assertTrue(productsPage.isFilterInMap(data.values(), brandName));
+
+//       Asserting Brand Category
+        String category = productsPage.getFirstProductCategory();
+        Assert.assertTrue(productsPage.isFilterInMap(data.values(), category));
 
     }
 

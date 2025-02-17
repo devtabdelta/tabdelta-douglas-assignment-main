@@ -15,6 +15,7 @@ public class HomePage {
     private static final Logger Log = LogManager.getLogger(HomePage.class.getName());
     private final By shadowHost = By.id("usercentrics-root");
     private final By acceptAllCookiesBtn = By.cssSelector("button[data-testid='uc-accept-all-button']");
+    private final By parfumProductsSection = By.xpath("//li/a[contains(@href,'parfum')]");
 
     public void handleCookieConsent() {
         try {
@@ -27,8 +28,8 @@ public class HomePage {
         }
     }
 
-    public ProductsPage navigateToProducts(String tabName) {
-        getDriver().findElement(By.xpath("//li/a[contains(text(),'" + tabName + "')]")).click();
+    public ProductsPage navigateToParfumProducts() {
+        getDriver().findElement(parfumProductsSection).click();
         return new ProductsPage();
     }
 

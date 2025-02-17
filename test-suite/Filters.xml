@@ -8,6 +8,7 @@
     <test verbose="2" name="Login Tests">
         <parameter name="browser" value="chrome"/>
         <parameter name="headless" value="false"/>
+        <parameter name="runOnRemote" value="false"/>
         <classes>
             <class name="testcases.FiltersTestCase"/>
         </classes>
