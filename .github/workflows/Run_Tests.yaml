@@ -1,0 +1,62 @@
+name: Run Selenium Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser (chrome, firefox, edge)'
+        required: true
+        default: 'Chrome'
+      browser_version:
+        description: 'Browser Version'
+        required: true
+        default: 'latest'
+      platform:
+        description: 'Platform (Windows 11, macOS, etc.)'
+        required: true
+        default: 'Windows 11'
+      xml_file:
+        description: 'TestNG XML file'
+        required: true
+        default: 'testng.xml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      SAUCE_PLATFORM: ${{ github.event.inputs.platform }}
+      SAUCE_BROWSER_VERSION: ${{ github.event.inputs.browser_version }}
+      SAUCE_BUILD: ${{ github.run_number }}
+      SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+      SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.8.2
+
+      - name: Run Tests
+        run: |
+          mvn clean test \
+            -DsuiteFile=${{ github.event.inputs.xml_file }} \
+            -Dheadless=false \
+            -Dbrowser=${{ github.event.inputs.browser }} \
+            -DrunOnRemote=true \
+            -e
+
+      - name: Upload HTML Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-reports
+          path: '**/reports/*.html'
