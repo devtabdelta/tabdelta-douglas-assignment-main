@@ -19,7 +19,6 @@ public class FiltersTestCase extends BaseClass {
         getDriver().get(ConfigReader.getProperty("url"));
     }
 
-
     @Test(dataProvider = "filtersData", dataProviderClass = CustomDataProvider.class)
     public void filtersTest(Map<String, String> data) {
 
@@ -28,17 +27,13 @@ public class FiltersTestCase extends BaseClass {
         ProductsPage productsPage = homePage.navigateToParfumProducts();
         productsPage.applyMultipleFilters(data);
 
-//        Verifying Filters Applied
         for (String filterName : data.values()) {
             Assert.assertTrue(productsPage.isFilterApplied(filterName));
         }
 
-
-//       Asserting Brand Filter
         String brandName = productsPage.getFirstProductBrand();
         Assert.assertTrue(productsPage.isFilterInMap(data.values(), brandName));
 
-//       Asserting Brand Category
         String category = productsPage.getFirstProductCategory();
         Assert.assertTrue(productsPage.isFilterInMap(data.values(), category));
 
